@@ -19,7 +19,9 @@ import java.util.ArrayList;
 
 public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder, FoodItem>{
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static RecyclerViewClickListener mItemListener;
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView foodName;
         ImageView foodImage;
@@ -29,11 +31,24 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
 
             foodName = (TextView) view.findViewById(R.id.food_name);
             foodImage = (ImageView) view.findViewById(R.id.food_imageview);
+
+            view.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v)
+        {
+            Log.d("ImageAdapter","Position hit" + this.getLayoutPosition());
+
+            mItemListener.recyclerViewListClicked(v, this.getLayoutPosition(), 0);
         }
     }
 
-    public FoodAdapter(Query query, @Nullable ArrayList<FoodItem> items, @Nullable ArrayList<String> keys) {
+    public FoodAdapter(Query query, @Nullable ArrayList<FoodItem> items, @Nullable ArrayList<String> keys, RecyclerViewClickListener itemListener) {
         super(query, items, keys);
+
+        mItemListener = itemListener;
     }
 
     @Override

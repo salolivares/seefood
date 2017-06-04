@@ -43,7 +43,7 @@ import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 import edu.ucsb.cs.cs190i.aviato.seefood.json.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerViewClickListener{
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     private static final String APP_TAG = "APP_ME";
     private String photoFileName;
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.food_rv);
-        foodAdapter = new FoodAdapter(query, foodAdapterItems, foodAdapterKeys);
+        foodAdapter = new FoodAdapter(query, foodAdapterItems, foodAdapterKeys, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(foodAdapter);
     }
@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         }.execute();
     }
+
 
     private void fetchRecipes(final Uri photoUri, final String foodName) {
         RecipeAPI.getRecipeResponse(foodName, new RecipeAPI.JsonResponseListener() {
@@ -240,5 +241,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void recyclerViewListClicked(View v, int position, int callingView) {
+        System.out.println(foodAdapter.getItem(position).foodName);
+
+        Intent intent = new Intent(this, RecipesActivity.class);
+        intent.putExtra("food object", foodAdapter.getItem(position));
+        startActivity(intent);
+
     }
 }

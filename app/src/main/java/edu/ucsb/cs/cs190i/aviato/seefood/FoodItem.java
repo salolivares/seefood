@@ -1,7 +1,9 @@
 package edu.ucsb.cs.cs190i.aviato.seefood;
 
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +11,7 @@ import java.util.List;
  */
 
 @IgnoreExtraProperties
-public class FoodItem {
+public class FoodItem implements Serializable {
     public String foodName;
     public String photoUri;
     public List<Recipe> recipes;

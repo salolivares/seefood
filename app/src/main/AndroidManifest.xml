@@ -3,12 +3,9 @@
     package="edu.ucsb.cs.cs190i.aviato.seefood">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-
-
 
     <application
         android:name=".App"
@@ -38,6 +35,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
         </provider>
+
+        <activity android:name=".RecipesActivity"></activity>
     </application>
 
 </manifest>
