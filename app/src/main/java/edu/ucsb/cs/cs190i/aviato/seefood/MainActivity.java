@@ -29,6 +29,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import clarifai2.api.ClarifaiResponse;
@@ -37,6 +38,7 @@ import clarifai2.dto.input.image.ClarifaiImage;
 import clarifai2.dto.model.ConceptModel;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
+import edu.ucsb.cs.cs190i.aviato.seefood.json.*;
 
 public class MainActivity extends AppCompatActivity {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
@@ -119,8 +121,25 @@ public class MainActivity extends AppCompatActivity {
         }.execute();
     }
 
-    private void fetchRecipes(DatabaseReference foodRef, String foodName) {
+    private void fetchRecipes(final DatabaseReference foodRef, String foodName) {
+        RecipeAPI.getRecipeResponse(foodName, new RecipeAPI.JsonResponseListener() {
+            @Override
+            public void onRecipeResponse(RecipeResponse recipeResponse) {
+                System.out.println(recipeResponse.getHits().get(0).getRecipe().getLabel());
 
+                List<Recipe> recipeList = new ArrayList<Recipe>();
+
+                for (Hit hit: recipeResponse.getHits())
+                {
+                    String label = hit.getRecipe().getLabel();
+                    String url = hit.getRecipe().getUrl();
+
+                    recipeList.add(new Recipe(label, url));
+                }
+
+                foodRef.child("recipes").setValue(recipeList);
+            }
+        });
     }
 
     private void setBusy(boolean b) {
