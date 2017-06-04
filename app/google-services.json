@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "375260409405",
+    "firebase_url": "https://seefood-31645.firebaseio.com",
+    "project_id": "seefood-31645",
+    "storage_bucket": "seefood-31645.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375260409405:android:93dce9f48e4fecc2",
+        "android_client_info": {
+          "package_name": "edu.ucsb.cs.cs190i.aviato.seefood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "375260409405-e20e9b5jt653bl4h0ffn1hfgr1qp89hn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqD9-Gr1oFNtDnJ3zIwab89W_naG2jNZo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
