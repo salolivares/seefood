@@ -36,7 +36,8 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
-        <activity android:name=".RecipesActivity"></activity>
+        <activity android:name=".RecipesActivity" />
+        <activity android:name=".RecipeWebViewActivity"></activity>
     </application>
 
 </manifest>

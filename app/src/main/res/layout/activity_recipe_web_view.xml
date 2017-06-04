@@ -4,13 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.ucsb.cs.cs190i.aviato.seefood.RecipesActivity">
-
-    <ListView
-        android:id="@+id/recipe_lv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp" />
+    tools:context="edu.ucsb.cs.cs190i.aviato.seefood.RecipeWebViewActivity">
 
 </android.support.constraint.ConstraintLayout>
