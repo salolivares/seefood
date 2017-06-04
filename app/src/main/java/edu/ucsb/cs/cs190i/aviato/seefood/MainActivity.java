@@ -31,6 +31,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                     return;
                 }
 
-                String foodName = predictions.get(0).data().get(0).name();
+                String foodName = WordUtils.capitalize(predictions.get(0).data().get(0).name());
+
                 fetchRecipes(takenPhotoUri, foodName);
             }
 
@@ -157,8 +160,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 {
                     String label = hit.getRecipe().getLabel();
                     String url = hit.getRecipe().getUrl();
+                    String imageUrl = hit.getRecipe().getImage();
 
-                    recipeList.add(new Recipe(label, url));
+                    recipeList.add(new Recipe(label, url, imageUrl));
                 }
 
                 FoodItem foodItem = new FoodItem(foodName,photoUri.toString(), recipeList);

@@ -12,12 +12,14 @@ import java.io.Serializable;
 class Recipe implements Serializable {
     public String name;
     public String url;
+    public String imageUrl;
 
     public Recipe() {
     }
 
-    public Recipe(String name, String url) {
+    public Recipe(String name, String url, String imageUrl) {
         this.name = name;
         this.url = url;
+        this.imageUrl = imageUrl;
     }
 }
