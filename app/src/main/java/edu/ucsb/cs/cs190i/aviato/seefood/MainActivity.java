@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
@@ -17,6 +18,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.List;
@@ -32,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     private static final String APP_TAG = "APP_ME";
     private String photoFileName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
                 final byte[] imageBytes = ClarifaiUtil.retrieveSelectedImage(this, takenPhotoUri);
                 if (imageBytes != null) {
-                    onImagePicked(imageBytes);
+                    onImagePicked(imageBytes, takenPhotoUri);
                 }
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
@@ -64,17 +75,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void onImagePicked(final byte[] imageBytes) {
+    private void onImagePicked(final byte[] imageBytes, final Uri takenPhotoUri) {
         // Now we will upload our image to the Clarifai API
         setBusy(true);
+
 
         new AsyncTask<Void, Void, ClarifaiResponse<List<ClarifaiOutput<Concept>>>>() {
             @Override protected ClarifaiResponse<List<ClarifaiOutput<Concept>>> doInBackground(Void... params) {
                 // The default Clarifai model that identifies concepts in images
-                final ConceptModel generalModel = App.get().clarifaiClient().getDefaultModels().generalModel();
+                final ConceptModel foodModel = App.get().clarifaiClient().getDefaultModels().foodModel();
 
                 // Use this model to predict, with the image that the user just selected as the input
-                return generalModel.predict()
+                return foodModel.predict()
                         .withInputs(ClarifaiInput.forImage(ClarifaiImage.of(imageBytes)))
                         .executeSync();
             }
@@ -90,9 +102,11 @@ public class MainActivity extends AppCompatActivity {
                     showErrorSnackbar("no_results_from_api");
                     return;
                 }
-                //adapter.setData(predictions.get(0).data());
-                System.out.println(predictions.get(0).data());
-                //imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
+
+                String foodName = predictions.get(0).data().get(0).name();
+                FoodItem foodItem = new FoodItem(foodName,takenPhotoUri.toString(), null);
+                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+                database.child("food").child(foodName + System.currentTimeMillis()).setValue(foodItem);
             }
 
             private void showErrorSnackbar(String s) {
