@@ -12,6 +12,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     private static final String APP_TAG = "APP_ME";
     private String photoFileName;
+    private Query query;
+    private FoodAdapter foodAdapter;
+    private ArrayList<FoodItem> foodAdapterItems;
+    private ArrayList<String> foodAdapterKeys;
 
 
     @Override
@@ -60,7 +67,28 @@ public class MainActivity extends AppCompatActivity {
                 openCamera();
             }
         });
+
+        setupFirebase();
+        setupRecyclerView();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        foodAdapter.destroy();
+    }
+
+    private void setupRecyclerView() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.food_rv);
+        foodAdapter = new FoodAdapter(query, foodAdapterItems, foodAdapterKeys);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(foodAdapter);
+    }
+
+    private void setupFirebase() {
+        query = FirebaseDatabase.getInstance().getReference().child("food");
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -106,12 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 String foodName = predictions.get(0).data().get(0).name();
-                FoodItem foodItem = new FoodItem(foodName,takenPhotoUri.toString(), null);
-                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference foodRef = database.child("food").child(foodName + System.currentTimeMillis());
-                foodRef.setValue(foodItem);
-
-                fetchRecipes(foodRef, foodName);
+                fetchRecipes(takenPhotoUri, foodName);
             }
 
             private void showErrorSnackbar(String s) {
@@ -121,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         }.execute();
     }
 
-    private void fetchRecipes(final DatabaseReference foodRef, String foodName) {
+    private void fetchRecipes(final Uri photoUri, final String foodName) {
         RecipeAPI.getRecipeResponse(foodName, new RecipeAPI.JsonResponseListener() {
             @Override
             public void onRecipeResponse(RecipeResponse recipeResponse) {
@@ -137,7 +160,10 @@ public class MainActivity extends AppCompatActivity {
                     recipeList.add(new Recipe(label, url));
                 }
 
-                foodRef.child("recipes").setValue(recipeList);
+                FoodItem foodItem = new FoodItem(foodName,photoUri.toString(), recipeList);
+                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+                DatabaseReference foodRef = database.child("food").child(foodName + System.currentTimeMillis());
+                foodRef.setValue(foodItem);
             }
         });
     }
