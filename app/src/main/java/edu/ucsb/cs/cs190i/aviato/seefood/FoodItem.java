@@ -22,4 +22,16 @@ public class FoodItem {
         this.photoUri = photoUri;
         this.recipes = recipes;
     }
+
+    public String getFoodName() {
+        return foodName;
+    }
+
+    public String getPhotoUri() {
+        return photoUri;
+    }
+
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
 }
