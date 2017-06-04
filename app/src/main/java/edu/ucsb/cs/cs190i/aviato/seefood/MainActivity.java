@@ -106,7 +106,10 @@ public class MainActivity extends AppCompatActivity {
                 String foodName = predictions.get(0).data().get(0).name();
                 FoodItem foodItem = new FoodItem(foodName,takenPhotoUri.toString(), null);
                 DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                database.child("food").child(foodName + System.currentTimeMillis()).setValue(foodItem);
+                DatabaseReference foodRef = database.child("food").child(foodName + System.currentTimeMillis());
+                foodRef.setValue(foodItem);
+
+                fetchRecipes(foodRef, foodName);
             }
 
             private void showErrorSnackbar(String s) {
@@ -114,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }.execute();
+    }
+
+    private void fetchRecipes(DatabaseReference foodRef, String foodName) {
+
     }
 
     private void setBusy(boolean b) {
