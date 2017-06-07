@@ -1,5 +1,6 @@
 package edu.ucsb.cs.cs190i.aviato.seefood;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -135,7 +136,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
 
     private void onImagePicked(final byte[] imageBytes, final Uri takenPhotoUri) {
         // Now we will upload our image to the Clarifai API
-        setBusy(true);
+        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Uploading...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
         // Upload to clarifai
         new AsyncTask<Void, Void, ClarifaiResponse<List<ClarifaiOutput<Concept>>>>() {
@@ -150,14 +156,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
             }
 
             @Override protected void onPostExecute(ClarifaiResponse<List<ClarifaiOutput<Concept>>> response) {
-                setBusy(false);
                 if (!response.isSuccessful()) {
                     Log.e(APP_TAG,"error while contacting api");
+                    progressDialog.dismiss();
                     return;
                 }
                 final List<ClarifaiOutput<Concept>> predictions = response.get();
                 if (predictions.isEmpty()) {
                     Log.e(APP_TAG,"no results from api");
+                    progressDialog.dismiss();
                     return;
                 }
 
@@ -168,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
+                        progressDialog.dismiss();
                         Log.e(APP_TAG, "could not upload to google storage");
 
                         // Delete photo from external storage
@@ -180,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        progressDialog.dismiss();
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         fetchRecipes(downloadUrl, WordUtils.capitalize(predictions.get(0).data().get(0).name()));
 
@@ -221,10 +230,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 foodRef.setValue(foodItem);
             }
         });
-    }
-
-    private void setBusy(boolean b) {
-
     }
 
     private void openCamera() {
