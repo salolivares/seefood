@@ -1,5 +1,6 @@
 package edu.ucsb.cs.cs190i.aviato.seefood;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -18,6 +20,7 @@ import java.util.ArrayList;
  */
 
 public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder, FoodItem>{
+    private Context context;
 
     public static RecyclerViewClickListener mItemListener;
 
@@ -45,9 +48,9 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
         }
     }
 
-    public FoodAdapter(Query query, @Nullable ArrayList<FoodItem> items, @Nullable ArrayList<String> keys, RecyclerViewClickListener itemListener) {
+    public FoodAdapter(Context context, Query query, @Nullable ArrayList<FoodItem> items, @Nullable ArrayList<String> keys, RecyclerViewClickListener itemListener) {
         super(query, items, keys);
-
+        this.context = context;
         mItemListener = itemListener;
     }
 
@@ -62,7 +65,10 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
     public void onBindViewHolder(FoodAdapter.ViewHolder holder, int position) {
         FoodItem item = getItem(position);
         holder.foodName.setText(item.foodName);
-        // TODO: Set image here.
+        Picasso.with(context)
+                .load(item.photoUri)
+                .resize(150, 150)
+                .centerCrop().into(holder.foodImage);
 
     }
 

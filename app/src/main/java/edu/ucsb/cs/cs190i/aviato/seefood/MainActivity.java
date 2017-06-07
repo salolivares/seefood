@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
 
     private void setupRecyclerView() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.food_rv);
-        foodAdapter = new FoodAdapter(query, foodAdapterItems, foodAdapterKeys, this);
+        foodAdapter = new FoodAdapter(this, query, foodAdapterItems, foodAdapterKeys, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(foodAdapter);
     }
