@@ -16,7 +16,7 @@ public class RecipesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipes);
 
         Intent intent = getIntent();
-        FoodItem fooditem = (FoodItem) intent.getSerializableExtra("food object");
+        FoodItem fooditem = (FoodItem) intent.getSerializableExtra("food_object");
 
         this.setTitle(fooditem.foodName + " Recipes");
 
@@ -30,7 +30,7 @@ public class RecipesActivity extends AppCompatActivity {
                 RecipeItem item = recipeAdapter.getItem(position);
 
                 Intent intent = new Intent(RecipesActivity.this, RecipeWebViewActivity.class);
-                intent.putExtra("recipe url", item.url);
+                intent.putExtra("recipe_url", item.url);
                 startActivity(intent);
 
             }
