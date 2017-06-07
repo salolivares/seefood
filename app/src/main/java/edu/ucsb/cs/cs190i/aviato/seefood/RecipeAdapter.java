@@ -16,20 +16,20 @@ import java.util.List;
  * Created by sal on 6/4/17.
  */
 
-public class RecipeAdapter extends ArrayAdapter<Recipe> {
+public class RecipeAdapter extends ArrayAdapter<RecipeItem> {
     private Context context;
-    private List<Recipe> recipes;
+    private List<RecipeItem> recipeItems;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes) {
-        super(context, 0, recipes);
+    public RecipeAdapter(Context context, List<RecipeItem> recipeItems) {
+        super(context, 0, recipeItems);
         this.context = context;
-        this.recipes = recipes;
+        this.recipeItems = recipeItems;
     }
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Recipe recipe = getItem(position);
+        RecipeItem recipeItem = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.food_item, parent, false);
         }
@@ -38,17 +38,17 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         ImageView imageView = (ImageView) convertView.findViewById(R.id.food_imageview);
 
 
-        textView.setText(recipe.name);
+        textView.setText(recipeItem.name);
         Picasso.with(context)
-                .load(recipe.imageUrl)
+                .load(recipeItem.imageUrl)
                 .resize(150, 150)
                 .centerCrop().into(imageView);
 
         return convertView;
     }
 
-    public Recipe getItem(int position){
-        return recipes.get(position);
+    public RecipeItem getItem(int position){
+        return recipeItems.get(position);
     }
 
 

@@ -1,11 +1,9 @@
 package edu.ucsb.cs.cs190i.aviato.seefood;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -22,14 +20,14 @@ public class RecipesActivity extends AppCompatActivity {
 
         this.setTitle(fooditem.foodName + " Recipes");
 
-        final RecipeAdapter recipeAdapter = new RecipeAdapter(this, fooditem.recipes);
+        final RecipeAdapter recipeAdapter = new RecipeAdapter(this, fooditem.recipeItems);
         listView = (ListView) findViewById(R.id.recipe_lv);
         listView.setAdapter(recipeAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Recipe item = recipeAdapter.getItem(position);
+                RecipeItem item = recipeAdapter.getItem(position);
 
                 Intent intent = new Intent(RecipesActivity.this, RecipeWebViewActivity.class);
                 intent.putExtra("recipe url", item.url);

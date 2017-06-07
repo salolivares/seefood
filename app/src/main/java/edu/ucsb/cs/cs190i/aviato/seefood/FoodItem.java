@@ -1,7 +1,6 @@
 package edu.ucsb.cs.cs190i.aviato.seefood;
 
 import com.google.firebase.database.IgnoreExtraProperties;
-import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,15 +13,15 @@ import java.util.List;
 public class FoodItem implements Serializable {
     public String foodName;
     public String photoUri;
-    public List<Recipe> recipes;
+    public List<RecipeItem> recipeItems;
 
     public FoodItem() {
     }
 
-    public FoodItem(String foodName, String photoUri, List<Recipe> recipes) {
+    public FoodItem(String foodName, String photoUri, List<RecipeItem> recipeItems) {
         this.foodName = foodName;
         this.photoUri = photoUri;
-        this.recipes = recipes;
+        this.recipeItems = recipeItems;
     }
 
     public String getFoodName() {
@@ -33,7 +32,7 @@ public class FoodItem implements Serializable {
         return photoUri;
     }
 
-    public List<Recipe> getRecipes() {
-        return recipes;
+    public List<RecipeItem> getRecipeItems() {
+        return recipeItems;
     }
 }
