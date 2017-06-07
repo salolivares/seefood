@@ -12,15 +12,15 @@ import java.util.List;
 @IgnoreExtraProperties
 public class FoodItem implements Serializable {
     public String foodName;
-    public String photoUri;
+    public String photoUrl;
     public List<RecipeItem> recipeItems;
 
     public FoodItem() {
     }
 
-    public FoodItem(String foodName, String photoUri, List<RecipeItem> recipeItems) {
+    public FoodItem(String foodName, String photoUrl, List<RecipeItem> recipeItems) {
         this.foodName = foodName;
-        this.photoUri = photoUri;
+        this.photoUrl = photoUrl;
         this.recipeItems = recipeItems;
     }
 
@@ -28,8 +28,8 @@ public class FoodItem implements Serializable {
         return foodName;
     }
 
-    public String getPhotoUri() {
-        return photoUri;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
     public List<RecipeItem> getRecipeItems() {

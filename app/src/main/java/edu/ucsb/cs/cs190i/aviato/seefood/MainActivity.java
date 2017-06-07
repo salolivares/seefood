@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -18,9 +19,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -111,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         // Now we will upload our image to the Clarifai API
         setBusy(true);
 
+        // Upload to clarifai
         new AsyncTask<Void, Void, ClarifaiResponse<List<ClarifaiOutput<Concept>>>>() {
             @Override protected ClarifaiResponse<List<ClarifaiOutput<Concept>>> doInBackground(Void... params) {
                 // The default Clarifai model that identifies concepts in images
@@ -134,9 +141,39 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                     return;
                 }
 
-                fetchRecipes(takenPhotoUri, WordUtils.capitalize(predictions.get(0).data().get(0).name()));
-            }
+                // Upload to google storage
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference photoRef = storageRef.child("images").child(photoFileName);
+                UploadTask uploadTask = photoRef.putBytes(imageBytes);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.e(APP_TAG, "could not upload to google storage");
 
+                        // Delete photo from external storage
+                        File file = new File(takenPhotoUri.toString());
+                        boolean deleted = file.delete();
+                        if(deleted){
+                            Log.i(APP_TAG, "uploaded photo removed from device");
+                        }
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        fetchRecipes(downloadUrl, WordUtils.capitalize(predictions.get(0).data().get(0).name()));
+
+                        // Delete photo from external storage
+                        File file = new File(takenPhotoUri.toString());
+                        boolean deleted = file.delete();
+                        if(deleted){
+                            Log.i(APP_TAG, "uploaded photo removed from device");
+                        }
+                    }
+                });
+
+
+            }
         }.execute();
     }
 

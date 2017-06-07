@@ -66,7 +66,7 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
         FoodItem item = getItem(position);
         holder.foodName.setText(item.foodName);
         Picasso.with(context)
-                .load(item.photoUri)
+                .load(item.photoUrl)
                 .resize(150, 150)
                 .centerCrop().into(holder.foodImage);
 
