@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -48,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         Constants
      */
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    public final static int LOGIN_REQUEST_CODE = 1222;
     private static final String APP_TAG = "SeeFood";
     public static final String FIREBASE_DB_KEY = "food";
-
 
     /*
         Fields
@@ -61,15 +63,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     private ArrayList<FoodItem> foodAdapterItems;
     private ArrayList<String> foodAdapterKeys;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Login - check if already logged in.
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,9 +78,24 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 openCamera();
             }
         });
+    }
 
-        setupFirebase();
-        setupRecyclerView();
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Login - check if already logged in.
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null){
+            showLogin();
+        } else {
+            setupRecyclerView();
+        }
+    }
+
+    private void showLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, LOGIN_REQUEST_CODE);
     }
 
     @Override
@@ -93,16 +105,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     }
 
     private void setupRecyclerView() {
+        query = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(FIREBASE_DB_KEY);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.food_rv);
         foodAdapter = new FoodAdapter(this, query, foodAdapterItems, foodAdapterKeys, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(foodAdapter);
     }
-
-    private void setupFirebase() {
-        query = FirebaseDatabase.getInstance().getReference().child(FIREBASE_DB_KEY);
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -115,6 +123,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 }
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if(requestCode == LOGIN_REQUEST_CODE){
+            if(resultCode == RESULT_OK){
+                setupRecyclerView();
             }
         }
     }
@@ -203,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
 
                 FoodItem foodItem = new FoodItem(foodName,photoUri.toString(), recipeItemList);
                 DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference foodRef = database.child(FIREBASE_DB_KEY).child(foodName + System.currentTimeMillis());
+                DatabaseReference foodRef = database.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(FIREBASE_DB_KEY).child(foodName + System.currentTimeMillis());
                 foodRef.setValue(foodItem);
             }
         });
@@ -276,8 +290,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.logout) {
+            FirebaseAuth.getInstance().signOut();
+            showLogin();
         }
 
         return super.onOptionsItemSelected(item);
