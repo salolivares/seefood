@@ -1,15 +1,12 @@
 package edu.ucsb.cs.cs190i.aviato.seefood;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,15 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -45,9 +36,18 @@ import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 import edu.ucsb.cs.cs190i.aviato.seefood.json.*;
 
-public class MainActivity extends AppCompatActivity implements RecyclerViewClickListener{
+public class MainActivity extends AppCompatActivity implements RecyclerViewClickListener {
+    /*
+        Constants
+     */
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-    private static final String APP_TAG = "APP_ME";
+    private static final String APP_TAG = "SeeFood";
+    public static final String FIREBASE_DB_KEY = "food";
+
+
+    /*
+        Fields
+     */
     private String photoFileName;
     private Query query;
     private FoodAdapter foodAdapter;
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     }
 
     private void setupFirebase() {
-        query = FirebaseDatabase.getInstance().getReference().child("food");
+        query = FirebaseDatabase.getInstance().getReference().child(FIREBASE_DB_KEY);
     }
 
 
@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         // Now we will upload our image to the Clarifai API
         setBusy(true);
 
-
         new AsyncTask<Void, Void, ClarifaiResponse<List<ClarifaiOutput<Concept>>>>() {
             @Override protected ClarifaiResponse<List<ClarifaiOutput<Concept>>> doInBackground(Void... params) {
                 // The default Clarifai model that identifies concepts in images
@@ -126,22 +125,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
             @Override protected void onPostExecute(ClarifaiResponse<List<ClarifaiOutput<Concept>>> response) {
                 setBusy(false);
                 if (!response.isSuccessful()) {
-                    showErrorSnackbar("error_while_contacting_api");
+                    Log.e(APP_TAG,"error while contacting api");
                     return;
                 }
                 final List<ClarifaiOutput<Concept>> predictions = response.get();
                 if (predictions.isEmpty()) {
-                    showErrorSnackbar("no_results_from_api");
+                    Log.e(APP_TAG,"no results from api");
                     return;
                 }
 
                 String foodName = WordUtils.capitalize(predictions.get(0).data().get(0).name());
 
                 fetchRecipes(takenPhotoUri, foodName);
-            }
-
-            private void showErrorSnackbar(String s) {
-                Log.d("App",s);
             }
 
         }.execute();
@@ -154,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
             public void onRecipeResponse(RecipeResponse recipeResponse) {
                 System.out.println(recipeResponse.getHits().get(0).getRecipe().getLabel());
 
-                List<Recipe> recipeList = new ArrayList<Recipe>();
+                List<RecipeItem> recipeItemList = new ArrayList<RecipeItem>();
 
                 for (Hit hit: recipeResponse.getHits())
                 {
@@ -162,10 +157,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                     String url = hit.getRecipe().getUrl();
                     String imageUrl = hit.getRecipe().getImage();
 
-                    recipeList.add(new Recipe(label, url, imageUrl));
+                    recipeItemList.add(new RecipeItem(label, url, imageUrl));
                 }
 
-                FoodItem foodItem = new FoodItem(foodName,photoUri.toString(), recipeList);
+                FoodItem foodItem = new FoodItem(foodName,photoUri.toString(), recipeItemList);
                 DatabaseReference database = FirebaseDatabase.getInstance().getReference();
                 DatabaseReference foodRef = database.child("food").child(foodName + System.currentTimeMillis());
                 foodRef.setValue(foodItem);

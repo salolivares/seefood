@@ -9,15 +9,15 @@ import java.io.Serializable;
  */
 
 @IgnoreExtraProperties
-class Recipe implements Serializable {
+class RecipeItem implements Serializable {
     public String name;
     public String url;
     public String imageUrl;
 
-    public Recipe() {
+    public RecipeItem() {
     }
 
-    public Recipe(String name, String url, String imageUrl) {
+    public RecipeItem(String name, String url, String imageUrl) {
         this.name = name;
         this.url = url;
         this.imageUrl = imageUrl;
