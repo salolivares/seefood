@@ -37,7 +37,9 @@
         </provider>
 
         <activity android:name=".RecipesActivity" />
-        <activity android:name=".RecipeWebViewActivity"></activity>
+        <activity android:name=".RecipeWebViewActivity" />
+        <activity android:name=".auth.LoginActivity"/>
+        <activity android:name=".auth.SignupActivity"/>
     </application>
 
 </manifest>
