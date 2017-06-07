@@ -40,6 +40,7 @@ import clarifai2.dto.input.image.ClarifaiImage;
 import clarifai2.dto.model.ConceptModel;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
+import edu.ucsb.cs.cs190i.aviato.seefood.auth.LoginActivity;
 import edu.ucsb.cs.cs190i.aviato.seefood.json.*;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewClickListener {
@@ -65,6 +66,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Login - check if already logged in.
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
