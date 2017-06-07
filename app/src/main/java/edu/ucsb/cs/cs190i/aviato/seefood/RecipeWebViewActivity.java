@@ -16,7 +16,7 @@ public class RecipeWebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        String url = intent.getStringExtra("recipe url");
+        String url = intent.getStringExtra("recipe_url");
 
         openWebPage(url);
     }

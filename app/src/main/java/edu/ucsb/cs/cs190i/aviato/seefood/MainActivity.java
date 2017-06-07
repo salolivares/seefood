@@ -134,9 +134,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                     return;
                 }
 
-                String foodName = WordUtils.capitalize(predictions.get(0).data().get(0).name());
-
-                fetchRecipes(takenPhotoUri, foodName);
+                fetchRecipes(takenPhotoUri, WordUtils.capitalize(predictions.get(0).data().get(0).name()));
             }
 
         }.execute();
@@ -162,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
 
                 FoodItem foodItem = new FoodItem(foodName,photoUri.toString(), recipeItemList);
                 DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference foodRef = database.child("food").child(foodName + System.currentTimeMillis());
+                DatabaseReference foodRef = database.child(FIREBASE_DB_KEY).child(foodName + System.currentTimeMillis());
                 foodRef.setValue(foodItem);
             }
         });
@@ -247,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         System.out.println(foodAdapter.getItem(position).foodName);
 
         Intent intent = new Intent(this, RecipesActivity.class);
-        intent.putExtra("food object", foodAdapter.getItem(position));
+        intent.putExtra("food_object", foodAdapter.getItem(position));
         startActivity(intent);
 
     }

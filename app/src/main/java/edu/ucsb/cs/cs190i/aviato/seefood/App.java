@@ -32,25 +32,11 @@ public class App extends Application {
     @Nullable
     private ClarifaiClient client;
 
-    @Nullable
-    private FirebaseStorage firebaseStorage;
-
     @Override
     public void onCreate() {
-        System.out.println("HERE");
         INSTANCE = this;
         client = new ClarifaiBuilder("gGdtlfx3ALK7wKl-nRTV_9qNQgSzS8AgX-xwk6Nf","-lTxAVv1JnNg7PGE6ZJw8r3q42Us68fzH0L6I_O8").buildSync();
-        firebaseStorage = FirebaseStorage.getInstance();
         super.onCreate();
-    }
-
-    @NonNull
-    public FirebaseStorage firebaseStorage(){
-        final FirebaseStorage firebaseStorage  = this.firebaseStorage;
-        if(firebaseStorage == null) {
-            throw new IllegalStateException("Cannot do this");
-        }
-        return firebaseStorage;
     }
 
     @NonNull
