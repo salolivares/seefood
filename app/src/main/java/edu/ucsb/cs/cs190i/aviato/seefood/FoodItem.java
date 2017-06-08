@@ -11,6 +11,7 @@ import java.util.List;
 
 @IgnoreExtraProperties
 public class FoodItem implements Serializable {
+    public String key;
     public String foodName;
     public String photoUrl;
     public List<RecipeItem> recipeItems;
@@ -18,21 +19,10 @@ public class FoodItem implements Serializable {
     public FoodItem() {
     }
 
-    public FoodItem(String foodName, String photoUrl, List<RecipeItem> recipeItems) {
+    public FoodItem(String key, String foodName, String photoUrl, List<RecipeItem> recipeItems) {
+        this.key = key;
         this.foodName = foodName;
         this.photoUrl = photoUrl;
         this.recipeItems = recipeItems;
-    }
-
-    public String getFoodName() {
-        return foodName;
-    }
-
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public List<RecipeItem> getRecipeItems() {
-        return recipeItems;
     }
 }

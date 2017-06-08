@@ -15,12 +15,15 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers.ItemTouchHelperAdapter;
+
 /**
  * Created by sal on 6/4/17.
  */
 
 public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder, FoodItem>{
     private Context context;
+
 
     public static RecyclerViewClickListener mItemListener;
 
@@ -38,6 +41,8 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
             view.setOnClickListener(this);
 
         }
+
+
 
         @Override
         public void onClick(View v)

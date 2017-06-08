@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -111,6 +112,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         foodAdapter = new FoodAdapter(this, query, foodAdapterItems, foodAdapterKeys, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(foodAdapter);
+
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecoration);
+
     }
 
     @Override
@@ -118,10 +124,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
-                final byte[] imageBytes = ClarifaiUtil.retrieveSelectedImage(this, takenPhotoUri);
-                if (imageBytes != null) {
-                    onImagePicked(imageBytes, takenPhotoUri);
-                }
+                onImagePicked(takenPhotoUri);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -134,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         }
     }
 
-    private void onImagePicked(final byte[] imageBytes, final Uri takenPhotoUri) {
+    private void onImagePicked(final Uri takenPhotoUri) {
         // Now we will upload our image to the Clarifai API
         final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setIndeterminate(true);
@@ -149,7 +152,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 // The default Clarifai model that identifies concepts in images
                 final ConceptModel foodModel = App.get().clarifaiClient().getDefaultModels().foodModel();
 
+                byte[] imageBytes = ClarifaiUtil.retrieveSelectedImage(MainActivity.this, takenPhotoUri, 75);
+
                 // Use this model to predict, with the image that the user just selected as the input
+                assert imageBytes != null;
                 return foodModel.predict()
                         .withInputs(ClarifaiInput.forImage(ClarifaiImage.of(imageBytes)))
                         .executeSync();
@@ -171,6 +177,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 // Upload to google storage
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
                 StorageReference photoRef = storageRef.child("images").child(photoFileName);
+
+                byte[] imageBytes = ClarifaiUtil.retrieveSelectedImage(MainActivity.this, takenPhotoUri, 25);
+                assert imageBytes != null;
+
                 UploadTask uploadTask = photoRef.putBytes(imageBytes);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -223,10 +233,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
 
                     recipeItemList.add(new RecipeItem(label, url, imageUrl));
                 }
-
-                FoodItem foodItem = new FoodItem(foodName,photoUri.toString(), recipeItemList);
+                String foodItemKey = foodName + System.currentTimeMillis();
+                FoodItem foodItem = new FoodItem(foodItemKey, foodName,photoUri.toString(), recipeItemList);
                 DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference foodRef = database.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(FIREBASE_DB_KEY).child(foodName + System.currentTimeMillis());
+
+                DatabaseReference foodRef = database.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(FIREBASE_DB_KEY).child(foodItemKey);
                 foodRef.setValue(foodItem);
             }
         });

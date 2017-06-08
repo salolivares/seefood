@@ -12,7 +12,7 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <pl.droidsonroids.gif.GifImageView 
+        <pl.droidsonroids.gif.GifImageView
             android:src="@drawable/logo"
             android:layout_width="wrap_content"
             android:layout_height="72dp"

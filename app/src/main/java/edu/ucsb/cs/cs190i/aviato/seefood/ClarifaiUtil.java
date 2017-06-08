@@ -35,14 +35,14 @@ class ClarifaiUtil {
      * @return
      */
     @Nullable
-    public static byte[] retrieveSelectedImage(@NonNull Context context, @NonNull Uri data) {
+    public static byte[] retrieveSelectedImage(@NonNull Context context, @NonNull Uri data, int compressLevel) {
         InputStream inStream = null;
         Bitmap bitmap = null;
         try {
             inStream = context.getContentResolver().openInputStream(data);
             bitmap = BitmapFactory.decodeStream(inStream);
             final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, compressLevel, outStream);
             return outStream.toByteArray();
         } catch (FileNotFoundException e) {
             return null;
