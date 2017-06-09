@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
@@ -18,6 +21,8 @@ import java.util.ArrayList;
 
 import edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers.ItemTouchHelperAdapter;
 import edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers.ItemTouchHelperViewHolder;
+
+import static edu.ucsb.cs.cs190i.aviato.seefood.MainActivity.FIREBASE_DB_KEY;
 
 /**
  * Created by sal on 6/4/17.
@@ -27,6 +32,9 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
 
 
     public static RecyclerViewClickListener mItemListener;
+
+
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemTouchHelperViewHolder {
 
         TextView foodName;
@@ -88,13 +96,20 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
     }
 
     @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-        return true;
+    public void onItemSwipedLeft(int position) {
+        FoodItem foodItem = getItem(position);
+        deleteFoodItem(foodItem.key);
     }
 
     @Override
-    public void onItemDismiss(int position) {
-        // TODO: REMOVE FROM FIREBASE
+    public void onItemSwipedRight(int position) {
+
+    }
+
+    private void deleteFoodItem(String key) {
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference foodRef = database.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(FIREBASE_DB_KEY).child(key);
+        foodRef.removeValue();
     }
 
     @Override protected void itemAdded(FoodItem item, String key, int position) {

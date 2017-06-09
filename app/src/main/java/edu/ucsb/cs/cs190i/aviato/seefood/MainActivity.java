@@ -242,7 +242,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 String foodItemKey = foodName + System.currentTimeMillis();
                 FoodItem foodItem = new FoodItem(foodItemKey, foodName,photoUri.toString(), recipeItemList);
                 DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-
                 DatabaseReference foodRef = database.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(FIREBASE_DB_KEY).child(foodItemKey);
                 foodRef.setValue(foodItem);
             }

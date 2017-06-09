@@ -5,6 +5,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+// SOURCES: https://github.com/iPaulPro/Android-ItemTouchHelper-Demo/tree/master/app/src/main/java/co/paulburke/android/itemtouchhelperdemo/helper
+
 /**
  * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and
  * swipe-to-dismiss. Drag events are automatically started by an item long-press.<br/>
@@ -53,16 +55,16 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (source.getItemViewType() != target.getItemViewType()) {
             return false;
         }
-
-        // Notify the adapter of the move
-        mAdapter.onItemMove(source.getAdapterPosition(), target.getAdapterPosition());
         return true;
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
-        // Notify the adapter of the dismissal
-        mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+        if(i == ItemTouchHelper.LEFT) {
+            mAdapter.onItemSwipedLeft(viewHolder.getAdapterPosition());
+        } else {
+            mAdapter.onItemSwipedRight(viewHolder.getAdapterPosition());
+        }
     }
 
     @Override

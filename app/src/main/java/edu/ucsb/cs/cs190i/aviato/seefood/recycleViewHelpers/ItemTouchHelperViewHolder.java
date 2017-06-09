@@ -2,6 +2,9 @@ package edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers;
 
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+// SOURCES: https://github.com/iPaulPro/Android-ItemTouchHelper-Demo/tree/master/app/src/main/java/co/paulburke/android/itemtouchhelperdemo/helper
+
+
 /**
  * Interface to notify an item ViewHolder of relevant callbacks from {@link
  * android.support.v7.widget.helper.ItemTouchHelper.Callback}.
