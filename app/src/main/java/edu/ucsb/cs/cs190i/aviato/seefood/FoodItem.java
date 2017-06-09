@@ -14,6 +14,7 @@ public class FoodItem implements Serializable {
     public String key;
     public String foodName;
     public String photoUrl;
+    public boolean isFavorite;
     public List<RecipeItem> recipeItems;
 
     public FoodItem() {
@@ -24,5 +25,6 @@ public class FoodItem implements Serializable {
         this.foodName = foodName;
         this.photoUrl = photoUrl;
         this.recipeItems = recipeItems;
+        isFavorite = false;
     }
 }

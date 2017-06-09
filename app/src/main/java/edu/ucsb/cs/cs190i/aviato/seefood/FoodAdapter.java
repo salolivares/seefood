@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import edu.ucsb.cs.cs190i.aviato.seefood.json.P;
 import edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers.ItemTouchHelperAdapter;
 import edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers.ItemTouchHelperViewHolder;
 
@@ -103,7 +104,18 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
 
     @Override
     public void onItemSwipedRight(int position) {
+        FoodItem foodItem = getItem(position);
+        if(foodItem.isFavorite) {
+            favoriteFoodItem(foodItem.key, false);
+        } else {
+            favoriteFoodItem(foodItem.key, true);
+        }
+    }
 
+    private void favoriteFoodItem(String key, boolean b) {
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference foodRef = database.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(FIREBASE_DB_KEY).child(key).child("isFavorite");
+        foodRef.setValue(b);
     }
 
     private void deleteFoodItem(String key) {
