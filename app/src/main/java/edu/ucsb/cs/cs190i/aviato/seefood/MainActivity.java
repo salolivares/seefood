@@ -15,6 +15,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -46,6 +47,7 @@ import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 import edu.ucsb.cs.cs190i.aviato.seefood.auth.LoginActivity;
 import edu.ucsb.cs.cs190i.aviato.seefood.json.*;
+import edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers.SimpleItemTouchHelperCallback;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewClickListener {
     /*
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     private FoodAdapter foodAdapter;
     private ArrayList<FoodItem> foodAdapterItems;
     private ArrayList<String> foodAdapterKeys;
+    private ItemTouchHelper itemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +116,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(foodAdapter);
 
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(foodAdapter);
+        itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
     }
 

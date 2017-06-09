@@ -1,6 +1,7 @@
 package edu.ucsb.cs.cs190i.aviato.seefood;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,18 +17,17 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers.ItemTouchHelperAdapter;
+import edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers.ItemTouchHelperViewHolder;
 
 /**
  * Created by sal on 6/4/17.
  */
 
-public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder, FoodItem>{
-    private Context context;
+public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder, FoodItem> implements ItemTouchHelperAdapter{
 
 
     public static RecyclerViewClickListener mItemListener;
-
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemTouchHelperViewHolder {
 
         TextView foodName;
         ImageView foodImage;
@@ -42,16 +42,26 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
 
         }
 
-
-
         @Override
         public void onClick(View v)
         {
             Log.d("ImageAdapter","Position hit" + this.getLayoutPosition());
-
             mItemListener.recyclerViewListClicked(v, this.getLayoutPosition(), 0);
         }
+
+        @Override
+        public void onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            itemView.setBackgroundColor(0);
+        }
     }
+
+    private Context context;
+
 
     public FoodAdapter(Context context, Query query, @Nullable ArrayList<FoodItem> items, @Nullable ArrayList<String> keys, RecyclerViewClickListener itemListener) {
         super(query, items, keys);
@@ -75,6 +85,16 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
                 .resize(150, 150)
                 .centerCrop().into(holder.foodImage);
 
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        // TODO: REMOVE FROM FIREBASE
     }
 
     @Override protected void itemAdded(FoodItem item, String key, int position) {
