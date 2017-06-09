@@ -33,9 +33,6 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
 
 
     public static RecyclerViewClickListener mItemListener;
-
-
-
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemTouchHelperViewHolder {
 
         TextView foodName;
@@ -70,8 +67,6 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
     }
 
     private Context context;
-
-
     public FoodAdapter(Context context, Query query, @Nullable ArrayList<FoodItem> items, @Nullable ArrayList<String> keys, RecyclerViewClickListener itemListener) {
         super(query, items, keys);
         this.context = context;

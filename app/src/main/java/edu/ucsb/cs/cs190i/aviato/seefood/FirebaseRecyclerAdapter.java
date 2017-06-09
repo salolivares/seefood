@@ -57,9 +57,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
      *              configuration change (e.g.: reloading the adapter after a device rotation).
      *              Be careful: items must be coherent with this list.
      */
-    public FirebaseRecyclerAdapter(Query query,
-                                   @Nullable ArrayList<T> items,
-                                   @Nullable ArrayList<String> keys) {
+    public FirebaseRecyclerAdapter(Query query, @Nullable ArrayList<T> items, @Nullable ArrayList<String> keys) {
         this.mQuery = query;
         if (items != null && keys != null) {
             this.mItems = items;
