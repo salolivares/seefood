@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     private void setupRecyclerView() {
         query = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(FIREBASE_DB_KEY);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.food_rv);
+
         foodAdapter = new FoodAdapter(this, query, foodAdapterItems, foodAdapterKeys, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(foodAdapter);

@@ -125,18 +125,18 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
     }
 
     @Override protected void itemAdded(FoodItem item, String key, int position) {
-        Log.d("MyAdapter", "Added a new item to the adapter.");
+        Log.d("FoodAdapter", "Added a new item to the adapter.");
     }
 
     @Override protected void itemChanged(FoodItem oldItem, FoodItem newItem, String key, int position) {
-        Log.d("MyAdapter", "Changed an item.");
+        Log.d("FoodAdapter", "Changed an item.");
     }
 
     @Override protected void itemRemoved(FoodItem item, String key, int position) {
-        Log.d("MyAdapter", "Removed an item from the adapter.");
+        Log.d("FoodAdapter", "Removed an item from the adapter.");
     }
 
     @Override protected void itemMoved(FoodItem item, String key, int oldPosition, int newPosition) {
-        Log.d("MyAdapter", "Moved an item.");
+        Log.d("FoodAdapter", "Moved an item.");
     }
 }
