@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="all">
+        <item android:id="@+id/rm_vegan"
+            android:title="@string/vegan" />
+        <item android:id="@+id/rm_vegetarian"
+            android:title="@string/vegetarian" />
+        <item android:id="@+id/rm_gluten"
+            android:title="@string/gluten_free" />
+        <item android:id="@+id/rm_peanut"
+            android:title="@string/peanut_free" />
+        <item android:id="@+id/rm_dairy"
+            android:title="@string/dairy_free" />
+        <item android:id="@+id/rm_alcohol"
+            android:title="@string/alcohol_free" />
+    </group>
+</menu>

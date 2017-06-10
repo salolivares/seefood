@@ -244,9 +244,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                     String label = hit.getRecipe().getLabel();
                     String url = hit.getRecipe().getUrl();
                     String imageUrl = hit.getRecipe().getImage();
+                    List<String> healthLabels = hit.getRecipe().getHealthLabels();
 
-                    recipeItemList.add(new RecipeItem(label, url, imageUrl));
+                    recipeItemList.add(new RecipeItem(label, url, imageUrl, healthLabels));
                 }
+
                 String foodItemKey = foodName + System.currentTimeMillis();
                 FoodItem foodItem = new FoodItem(foodItemKey, foodName,photoUri.toString(), recipeItemList);
                 DatabaseReference database = FirebaseDatabase.getInstance().getReference();

@@ -37,8 +37,8 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
-        <activity android:name=".RecipesActivity" />
-        <activity android:name=".RecipeWebViewActivity" />
+        <activity android:name=".RecipesActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name=".RecipeWebViewActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity android:name=".auth.LoginActivity"/>
         <activity android:name=".auth.SignupActivity"/>
     </application>

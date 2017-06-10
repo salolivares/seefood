@@ -50,11 +50,11 @@ public class RecipeAPI {
 
             try {
                 ///search?q=strawberry&app_id=cd3b4591&app_key=fbf8880153e010a1ce016562d04ee681&from=0&to=9
-                String endpoint = BASE_URL + "?q=" + params[0] + "&app_id=" + APP_ID + "&app_key=" + API_KEY + "&from=0&to=10";
+                String endpoint = BASE_URL + "?q=" + params[0] + "&app_id=" + APP_ID + "&app_key=" + API_KEY + "&from=0&to=30";
                 URL recipeAPIendpoint = new URL(endpoint);
                 HttpsURLConnection httpsURLConnection = (HttpsURLConnection) recipeAPIendpoint.openConnection();
 
-                if (httpsURLConnection.getResponseCode() == 200) {
+                if (httpsURLConnection. getResponseCode() == 200) {
                     InputStream responseBody = httpsURLConnection.getInputStream();
                     InputStreamReader responseBodyReader = new InputStreamReader(responseBody, "UTF-8");
 
