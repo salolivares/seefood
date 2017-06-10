@@ -169,6 +169,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
             }
 
             @Override protected void onPostExecute(ClarifaiResponse<List<ClarifaiOutput<Concept>>> response) {
+                if(response == null) {
+                    Log.e(APP_TAG,"null concept");
+                    progressDialog.dismiss();
+                    return;
+                }
+
+
                 if (!response.isSuccessful()) {
                     Log.e(APP_TAG,"error while contacting api");
                     progressDialog.dismiss();
