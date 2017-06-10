@@ -77,12 +77,17 @@ public class RecipesActivity extends AppCompatActivity {
                     item.setChecked(true);
                 }
 
-                String filter="";
-                for(String f: filters)
-                    filter+=(f+"|");
+                if(!filters.isEmpty()){
+                    String filter="";
+                    for(String f: filters)
+                        filter+=(f+"|");
 
-                recipeAdapter.setRecipes(fooditem.recipeItems);
-                recipeAdapter.getFilter().filter(filter);
+                    recipeAdapter.setRecipes(fooditem.recipeItems);
+                    recipeAdapter.getFilter().filter(filter);
+                } else {
+                    recipeAdapter.setRecipes(fooditem.recipeItems);
+                    recipeAdapter.notifyDataSetChanged();
+                }
 
                 return true;
             default:
