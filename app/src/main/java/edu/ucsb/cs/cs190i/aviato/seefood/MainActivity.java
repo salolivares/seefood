@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     public final static int LOGIN_REQUEST_CODE = 1222;
     private static final String APP_TAG = "SeeFood";
     public static final String FIREBASE_DB_KEY = "food";
+    private static final int PICK_PHOTO_CODE = 1233;
 
     /*
         Fields
@@ -81,6 +82,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
             @Override
             public void onClick(View view) {
                 openCamera();
+            }
+        });
+
+        FloatingActionButton galleryFab = (FloatingActionButton) findViewById(R.id.gallery_fab);
+        galleryFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
             }
         });
     }
@@ -117,9 +126,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(foodAdapter);
 
-        //RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        //recyclerView.addItemDecoration(itemDecoration);
-
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(foodAdapter);
         itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -140,6 +146,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         if(requestCode == LOGIN_REQUEST_CODE){
             if(resultCode == RESULT_OK){
                 setupRecyclerView();
+            }
+        }
+
+        if (requestCode == PICK_PHOTO_CODE){
+            if (data != null) {
+                if (resultCode == RESULT_OK) {
+                    Uri photoUri = data.getData();
+                    onImagePicked(photoUri);
+                } else { // Result was a failure
+                    Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -271,6 +288,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
+    private void openGallery() {
+        // Create intent for picking a photo from the gallery
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+
+        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+        // So as long as the result is not null, it's safe to use the intent.
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Bring up gallery to select a photo
+            startActivityForResult(intent, PICK_PHOTO_CODE);
         }
     }
 
