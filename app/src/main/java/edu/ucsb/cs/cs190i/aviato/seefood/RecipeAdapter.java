@@ -37,7 +37,6 @@ public class RecipeAdapter extends ArrayAdapter<RecipeItem> {
         TextView textView = (TextView) convertView.findViewById(R.id.food_name);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.food_imageview);
 
-
         textView.setText(recipeItem.name);
         Picasso.with(context)
                 .load(recipeItem.imageUrl)

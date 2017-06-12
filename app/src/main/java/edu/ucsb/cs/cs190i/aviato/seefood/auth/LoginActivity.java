@@ -1,7 +1,9 @@
 package edu.ucsb.cs.cs190i.aviato.seefood.auth;
 
 
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +11,10 @@ import android.util.Log;
 
 import android.content.Intent;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,12 +39,36 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.input_password) EditText passwordText;
     @BindView(R.id.btn_login) Button loginButton;
     @BindView(R.id.link_signup) TextView signupLink;
+    @BindView(R.id.appname_tv) TextView appNameText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        // SOURCE: https://stackoverflow.com/questions/36894384/android-move-background-continuously-with-animation
+        /*final ImageView backgroundOne = (ImageView) findViewById(R.id.background_one);
+        final ImageView backgroundTwo = (ImageView) findViewById(R.id.background_two);
+
+        final ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.setDuration(200000L);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                final float progress = (float) animation.getAnimatedValue();
+                final float width = backgroundOne.getWidth();
+                final float translationX = width * progress;
+                backgroundOne.setTranslationX(translationX);
+                backgroundTwo.setTranslationX(translationX - (width+2));
+            }
+        });
+        animator.start(); */
+
+        Typeface typeFace=Typeface.createFromAsset(getAssets(),"fonts/biorhyme.ttf");
+        appNameText.setTypeface(typeFace);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
 

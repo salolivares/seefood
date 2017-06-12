@@ -117,8 +117,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(foodAdapter);
 
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(itemDecoration);
+        //RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        //recyclerView.addItemDecoration(itemDecoration);
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(foodAdapter);
         itemTouchHelper = new ItemTouchHelper(callback);
