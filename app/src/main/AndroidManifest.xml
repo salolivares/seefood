@@ -43,6 +43,7 @@
             android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".RecipeWebViewActivity"
+            android:parentActivityName=".RecipesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity
             android:name=".auth.LoginActivity"

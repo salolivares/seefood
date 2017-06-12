@@ -297,6 +297,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
 
+        photoFileName = "photo" + System.currentTimeMillis() + ".jpg";
+
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
         if (intent.resolveActivity(getPackageManager()) != null) {

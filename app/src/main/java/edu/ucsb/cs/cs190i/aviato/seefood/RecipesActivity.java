@@ -44,6 +44,7 @@ public class RecipesActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(RecipesActivity.this, RecipeWebViewActivity.class);
                 intent.putExtra("recipe_url", item.url);
+                intent.putExtra("title",item.name);
                 startActivity(intent);
 
             }

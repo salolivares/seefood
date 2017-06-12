@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
@@ -20,6 +21,10 @@ public class RecipeWebViewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String url = intent.getStringExtra("recipe_url");
+        String title = intent.getStringExtra("title");
+
+        this.setTitle(title);
+
 
         openWebPage(url);
     }
@@ -36,5 +41,15 @@ public class RecipeWebViewActivity extends AppCompatActivity {
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             handler.proceed(); // Ignore SSL certificate errors
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
