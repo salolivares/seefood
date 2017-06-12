@@ -69,6 +69,8 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         query.addChildEventListener(mListener);
     }
 
+
+
     private ChildEventListener mListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
@@ -164,6 +166,8 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
             Log.e("FirebaseListAdapter", "Listen was cancelled, no more updates will occur.");
         }
 
+
+
     };
 
     @Override
@@ -176,6 +180,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     public int getItemCount() {
         return (mItems != null) ? mItems.size() : 0;
     }
+
 
     /**
      * Clean the adapter.

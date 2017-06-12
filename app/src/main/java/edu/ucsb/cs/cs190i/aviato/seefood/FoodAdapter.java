@@ -2,6 +2,8 @@ package edu.ucsb.cs.cs190i.aviato.seefood;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +22,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import edu.ucsb.cs.cs190i.aviato.seefood.json.P;
 import edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers.ItemTouchHelperAdapter;
 import edu.ucsb.cs.cs190i.aviato.seefood.recycleViewHelpers.ItemTouchHelperViewHolder;
@@ -29,20 +33,22 @@ import static edu.ucsb.cs.cs190i.aviato.seefood.MainActivity.FIREBASE_DB_KEY;
  * Created by sal on 6/4/17.
  */
 
-public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder, FoodItem> implements ItemTouchHelperAdapter{
-
-
-    public static RecyclerViewClickListener mItemListener;
+public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder, FoodItem> implements ItemTouchHelperAdapter {
+    /**
+     * VIEWHOLDER. This does something. Just not sure what.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemTouchHelperViewHolder {
 
         TextView foodName;
         ImageView foodImage;
+        ImageView starImage;
 
         public ViewHolder(View view) {
             super(view);
 
             foodName = (TextView) view.findViewById(R.id.food_name);
             foodImage = (ImageView) view.findViewById(R.id.food_imageview);
+            starImage = (ImageView) view.findViewById(R.id.star_image);
 
             view.setOnClickListener(this);
 
@@ -66,7 +72,13 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
         }
     }
 
+    /**
+     * FIELDS
+     */
     private Context context;
+    public static RecyclerViewClickListener mItemListener;
+
+
     public FoodAdapter(Context context, Query query, @Nullable ArrayList<FoodItem> items, @Nullable ArrayList<String> keys, RecyclerViewClickListener itemListener) {
         super(query, items, keys);
         this.context = context;
@@ -76,7 +88,6 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
     @Override
     public FoodAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_item, parent, false);
-
         return new ViewHolder(view);
     }
 
@@ -88,6 +99,11 @@ public class FoodAdapter extends FirebaseRecyclerAdapter<FoodAdapter.ViewHolder,
                 .load(item.photoUrl)
                 .resize(150, 150)
                 .centerCrop().into(holder.foodImage);
+
+
+        if(item.isFavorite){
+            holder.starImage.setVisibility(View.VISIBLE);
+        }
 
     }
 
